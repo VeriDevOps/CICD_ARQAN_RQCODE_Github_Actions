@@ -22,16 +22,19 @@ async function run() {
       })
       .then(
         (response) => {
-          console.log(response.data)
-          console.log(response.status)
-          return response.data
+          return response
         },
         (error) => {
           console.log(error)
           return error
         }
       )
-    console.log(`Text: ${result}!`)
+    let security: Array<string> = result.data.security_text
+    if (!security) {
+      console.log('not secure')
+    } else {
+      console.log('secure')
+    }
     // const time = (new Date()).toTimeString();
 
     // core.setOutput("time", time);
