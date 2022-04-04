@@ -1,0 +1,14 @@
+name: Issue label
+
+on: 
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    name: Add label to Issue if it is secure
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./ # load and run local action
+        name: Label an issue
