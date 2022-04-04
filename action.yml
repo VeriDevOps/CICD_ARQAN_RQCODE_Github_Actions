@@ -1,5 +1,9 @@
 name: 'Security text identification'
 description: 'Identify whether the text is secure or not'
+inputs:
+  token:
+    description: 'The GitHub token to use.'
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'

@@ -12,3 +12,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./ # load and run local action
         name: Label an issue
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
