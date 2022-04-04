@@ -5,6 +5,8 @@ import axios, { AxiosResponse } from 'axios'
 async function run() {
   try {
     const token = core.getInput('token', { required: true })
+    const owner = github.context.repo.owner
+    const repo = github.context.repo.repo
     const issue_number = getIssueNumber()
     const issue_title = getIssueTitle()
     const issue_body = getIssueBody()
@@ -30,11 +32,14 @@ async function run() {
         }
       )
     let security: Array<string> = result.data.security_text
-    console.log(security)
-    if (!security) {
-      console.log('not secure')
-    } else {
-      console.log('secure')
+    if (security.length) {
+      // console.log('secure')
+      octokit.rest.issues.addLabels({
+        owner,
+        repo,
+        issue_number,
+        labels: ['secure']
+      })
     }
     // const time = (new Date()).toTimeString();
 

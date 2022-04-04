@@ -11434,6 +11434,8 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core.getInput('token', { required: true });
+            const owner = github.context.repo.owner;
+            const repo = github.context.repo.repo;
             const issue_number = getIssueNumber();
             const issue_title = getIssueTitle();
             const issue_body = getIssueBody();
@@ -11454,12 +11456,14 @@ function run() {
                 return error;
             });
             let security = result.data.security_text;
-            console.log(security);
-            if (!security) {
-                console.log('not secure');
-            }
-            else {
-                console.log('secure');
+            if (security.length) {
+                // console.log('secure')
+                octokit.rest.issues.addLabels({
+                    owner,
+                    repo,
+                    issue_number,
+                    labels: ['secure']
+                });
             }
             // const time = (new Date()).toTimeString();
             // core.setOutput("time", time);
