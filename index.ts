@@ -17,7 +17,7 @@ async function run() {
     const octokit = github.getOctokit(token)
 
     let result: AxiosResponse = await axios
-      .post('51.178.12.108:8000/text', issue_title + issue_body, {
+      .post('http://51.178.12.108:8000/text', issue_title + issue_body, {
         headers: { 'Content-type': 'text/plain;' }
       })
       .then(

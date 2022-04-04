@@ -11444,7 +11444,7 @@ function run() {
             // A client to load data from GitHub
             const octokit = github.getOctokit(token);
             let result = yield axios_1.default
-                .post('51.178.12.108:8000/text', issue_title + issue_body, {
+                .post('http://51.178.12.108:8000/text', issue_title + issue_body, {
                 headers: { 'Content-type': 'text/plain;' }
             })
                 .then((response) => {
