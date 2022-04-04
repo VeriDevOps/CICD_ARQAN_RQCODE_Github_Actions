@@ -11454,6 +11454,7 @@ function run() {
                 return error;
             });
             let security = result.data.security_text;
+            console.log(security);
             if (!security) {
                 console.log('not secure');
             }

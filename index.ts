@@ -30,6 +30,7 @@ async function run() {
         }
       )
     let security: Array<string> = result.data.security_text
+    console.log(security)
     if (!security) {
       console.log('not secure')
     } else {
