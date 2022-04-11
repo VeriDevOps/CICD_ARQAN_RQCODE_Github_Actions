@@ -11439,14 +11439,23 @@ function run() {
             const issue_number = getIssueNumber();
             const issue_title = getIssueTitle();
             const issue_body = getIssueBody();
-            if (issue_number === undefined || issue_body === undefined) {
-                console.log('Could not get issue number or issue body from context, exiting');
+            if (issue_number === undefined || issue_title === undefined) {
+                console.log('Could not get issue number or issue title from context, exiting');
                 return;
             }
             // A client to load data from GitHub
             const octokit = github.getOctokit(token);
+            console.log(issue_title + issue_body);
+            let issue_text = issue_title == null
+                ? issue_body == null
+                    ? ''
+                    : issue_body
+                : issue_body == null
+                    ? issue_title
+                    : issue_title + issue_body;
+            console.log(issue_text);
             let result = yield axios_1.default
-                .post('http://51.178.12.108:8000/text', issue_title + issue_body, {
+                .post('http://51.178.12.108:8000/text', issue_text, {
                 headers: { 'Content-type': 'text/plain;' }
             })
                 .then((response) => {
@@ -11457,7 +11466,6 @@ function run() {
             });
             let security = result.data.security_text;
             if (security.length) {
-                // console.log('secure')
                 octokit.rest.issues.addLabels({
                     owner,
                     repo,
@@ -11465,8 +11473,6 @@ function run() {
                     labels: ['secure']
                 });
             }
-            // const time = (new Date()).toTimeString();
-            // core.setOutput("time", time);
         }
         catch (error) {
             core.setFailed(error.message);
