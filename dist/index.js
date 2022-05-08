@@ -11433,19 +11433,24 @@ const axios_1 = __importDefault(__nccwpck_require__(6545));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            // get inputs of the action
             const token = core.getInput('token', { required: true });
+            const label = core.getInput('label', { required: false });
+            const stigs = core.getInput('stigs-comment', { required: false });
+            // get repo context
             const owner = github.context.repo.owner;
             const repo = github.context.repo.repo;
+            // get issue context
             const issue_number = getIssueNumber();
             const issue_title = getIssueTitle();
             const issue_body = getIssueBody();
+            // check whether issue exists
             if (issue_number === undefined || issue_title === undefined) {
                 console.log('Could not get issue number or issue title from context, exiting');
                 return;
             }
             // A client to load data from GitHub
             const octokit = github.getOctokit(token);
-            console.log(issue_title + issue_body);
             let issue_text = issue_title == null
                 ? issue_body == null
                     ? ''
@@ -11453,7 +11458,8 @@ function run() {
                 : issue_body == null
                     ? issue_title
                     : issue_title + issue_body;
-            console.log(issue_text);
+            console.log('Issue full text: ', issue_text);
+            // API call to ARQAN to classify the requirement
             let result = yield axios_1.default
                 .post('http://51.178.12.108:8000/text', issue_text, {
                 headers: { 'Content-type': 'text/plain;' }
@@ -11464,15 +11470,32 @@ function run() {
                 console.log(error);
                 return error;
             });
-            let security = result.data.security_text;
-            if (security.length) {
-                octokit.rest.issues.addLabels({
+            let security_sentences = result.data.security_text;
+            // if answer from api has elements in the array,
+            // then issue is security requirement
+            if (security_sentences.length) {
+                yield octokit.rest.issues.addLabels({
                     owner,
                     repo,
                     issue_number,
-                    labels: ['secure']
+                    labels: [label]
                 });
             }
+            if (stigs === 'true') {
+                // TODO: Make actual API call when API will be ready
+                // fake api response
+                let response = 'Recommended STIG: [V-214961](https://www.stigviewer.com/stig/canonical_ubuntu_16.04_lts/2020-12-09/finding/V-214961).';
+                // post a comment about recommended STIG
+                yield octokit.rest.issues.createComment({
+                    owner,
+                    repo,
+                    issue_number,
+                    body: response
+                });
+            }
+            // TODO: search for stig in RQCODE
+            // TODO: post a comment about already implemented test on the STIG or
+            // TODO: Create Issue in RQCODE
         }
         catch (error) {
             core.setFailed(error.message);

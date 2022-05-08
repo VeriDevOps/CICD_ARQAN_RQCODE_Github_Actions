@@ -1,9 +1,17 @@
-name: 'Security text identification'
-description: 'Identify whether the text is secure or not'
+name: 'Security requirement analysis'
+description: 'Identify whether the issue is security requirement or not'
 inputs:
   token:
     description: 'The GitHub token to use.'
     required: true
+  label:
+    description: 'Label of security requirement'
+    required: false
+    default: 'security'
+  stigs-comment:
+    description: 'Enable STIGs suggestion through issue commenting'
+    required: false
+    default: 'true'
 runs:
   using: 'node16'
   main: 'dist/index.js'
