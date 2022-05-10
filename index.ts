@@ -76,6 +76,9 @@ async function run() {
     // TODO: search for stig in RQCODE
     // TODO: post a comment about already implemented test on the STIG or
     // TODO: Create Issue in RQCODE
+    const { exec } = require('child_process')
+    executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec)
+    executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec)
   } catch (error: any) {
     core.setFailed(error.message)
   }
@@ -105,6 +108,21 @@ function getIssueBody(): string | undefined {
   }
 
   return issue.body
+}
+
+function executeCommand(cmd: string, exec: any) {
+  exec(cmd, (error: Error, stdout: string | Buffer, stderr: string | Buffer) => {
+    if (error) {
+      console.log(`error: ${error.message}`)
+      return
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`)
+      return
+    }
+    console.log(`stdout: ${stdout}`)
+    return stdout
+  })
 }
 
 run()

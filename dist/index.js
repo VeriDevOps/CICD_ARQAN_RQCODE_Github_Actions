@@ -11496,6 +11496,9 @@ function run() {
             // TODO: search for stig in RQCODE
             // TODO: post a comment about already implemented test on the STIG or
             // TODO: Create Issue in RQCODE
+            const { exec } = __nccwpck_require__(2081);
+            executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec);
+            executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -11523,6 +11526,20 @@ function getIssueBody() {
     }
     return issue.body;
 }
+function executeCommand(cmd, exec) {
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        return stdout;
+    });
+}
 run();
 
 
@@ -11549,6 +11566,14 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
