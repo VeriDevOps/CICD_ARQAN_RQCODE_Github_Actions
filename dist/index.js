@@ -11589,7 +11589,7 @@ function executeCommand(cmd, exec) {
                 return;
             }
             else {
-                resolve('stdout');
+                resolve(`${stdout}`);
             }
         });
     });

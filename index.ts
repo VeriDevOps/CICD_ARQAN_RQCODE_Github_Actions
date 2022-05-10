@@ -180,7 +180,7 @@ function executeCommand(cmd: string, exec: any): Promise<string> {
         reject(error)
         return
       } else {
-        resolve('stdout')
+        resolve(`${stdout}`)
       }
     })
   })
