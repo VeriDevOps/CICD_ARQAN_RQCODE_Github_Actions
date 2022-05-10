@@ -11490,7 +11490,7 @@ function run() {
                     let stigs_ids = [];
                     // Issue comment content
                     let body = 'Recommended STIG:';
-                    for (let url in response) {
+                    for (let url of response) {
                         // get STIG ID from the url
                         let stig_id = url.split('/').pop();
                         if (stig_id) {
@@ -11516,7 +11516,7 @@ function run() {
                     let new_issues = 'Report about not realized tests for STIGs in [RQCODE](https://github.com/anaumchev/VDO-Patterns.git):';
                     const { exec } = __nccwpck_require__(2081);
                     yield executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec);
-                    for (let stig_id in stigs_ids) {
+                    for (let stig_id of stigs_ids) {
                         let stig_dir = stig_id.replace(/-/g, '_');
                         yield executeCommand(`find VDO-Patterns/src/rqcode/stigs -type d -name "${stig_dir}"`, exec)
                             .then((data) => {

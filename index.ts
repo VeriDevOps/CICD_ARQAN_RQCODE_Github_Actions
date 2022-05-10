@@ -72,7 +72,7 @@ async function run() {
         // Issue comment content
         let body = 'Recommended STIG:'
 
-        for (let url in response) {
+        for (let url of response) {
           // get STIG ID from the url
           let stig_id = url.split('/').pop()
           if (stig_id) {
@@ -103,7 +103,7 @@ async function run() {
         const { exec } = require('child_process')
         await executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec)
 
-        for (let stig_id in stigs_ids) {
+        for (let stig_id of stigs_ids) {
           let stig_dir = stig_id.replace(/-/g, '_')
           await executeCommand(`find VDO-Patterns/src/rqcode/stigs -type d -name "${stig_dir}"`, exec)
             .then((data) => {
