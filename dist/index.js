@@ -11497,8 +11497,8 @@ function run() {
             // TODO: post a comment about already implemented test on the STIG or
             // TODO: Create Issue in RQCODE
             const { exec } = __nccwpck_require__(2081);
-            executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec);
-            executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec);
+            yield executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec);
+            yield executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -11527,17 +11527,20 @@ function getIssueBody() {
     return issue.body;
 }
 function executeCommand(cmd, exec) {
-    exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
+    return new Promise((resolve, reject) => {
+        exec(cmd, (error, stdout, stderr) => {
+            console.log(`Command: ${cmd}`);
+            console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-        return stdout;
+            if (error) {
+                console.log(`error: ${error.message}`);
+                reject(error);
+                return;
+            }
+            else {
+                resolve('Okay');
+            }
+        });
     });
 }
 run();

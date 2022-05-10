@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import axios, { AxiosResponse } from 'axios'
+import { resolve } from 'path'
 
 async function run() {
   try {
@@ -77,8 +78,8 @@ async function run() {
     // TODO: post a comment about already implemented test on the STIG or
     // TODO: Create Issue in RQCODE
     const { exec } = require('child_process')
-    executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec)
-    executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec)
+    await executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec)
+    await executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec)
   } catch (error: any) {
     core.setFailed(error.message)
   }
@@ -111,17 +112,19 @@ function getIssueBody(): string | undefined {
 }
 
 function executeCommand(cmd: string, exec: any) {
-  exec(cmd, (error: Error, stdout: string | Buffer, stderr: string | Buffer) => {
-    if (error) {
-      console.log(`error: ${error.message}`)
-      return
-    }
-    if (stderr) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error: Error, stdout: string | Buffer, stderr: string | Buffer) => {
+      console.log(`Command: ${cmd}`)
+      console.log(`stdout: ${stdout}`)
       console.log(`stderr: ${stderr}`)
-      return
-    }
-    console.log(`stdout: ${stdout}`)
-    return stdout
+      if (error) {
+        console.log(`error: ${error.message}`)
+        reject(error)
+        return
+      } else {
+        resolve('Okay')
+      }
+    })
   })
 }
 
