@@ -11484,21 +11484,72 @@ function run() {
             if (stigs === 'true') {
                 // TODO: Make actual API call when API will be ready
                 // fake api response
-                let response = 'Recommended STIG: [V-214961](https://www.stigviewer.com/stig/canonical_ubuntu_16.04_lts/2020-12-09/finding/V-214961).';
-                // post a comment about recommended STIG
-                yield octokit.rest.issues.createComment({
-                    owner,
-                    repo,
-                    issue_number,
-                    body: response
-                });
+                let response = ['https://www.stigviewer.com/stig/canonical_ubuntu_16.04_lts/2020-12-09/finding/V-214961'];
+                if (response.length !== 0) {
+                    // array for STIG IDs recommended to the particular requirement
+                    let stigs_ids = [];
+                    // Issue comment content
+                    let body = 'Recommended STIG:';
+                    for (let url in response) {
+                        // get STIG ID from the url
+                        let stig_id = url.split('/').pop();
+                        if (stig_id) {
+                            // for each url in the response make a link in the comment
+                            body += `\r\n- [${stig_id}](${url})`;
+                            // add STIG ID to array of all recommended stigs
+                            stigs_ids.push(stig_id);
+                        }
+                        else {
+                            throw new Error(`Couldn't get STIG ID from the url: ${url} returned by ARQAN`);
+                        }
+                    }
+                    // post a comment about recommended STIG
+                    yield octokit.rest.issues.createComment({
+                        owner,
+                        repo,
+                        issue_number,
+                        body: body
+                    });
+                    // INTERACTION with RQCODE repository goes here
+                    // search for stig in RQCODE
+                    body = 'Recommended RQCODE:';
+                    let new_issues = 'Report about not realized tests for STIGs in [RQCODE](https://github.com/anaumchev/VDO-Patterns.git):';
+                    const { exec } = __nccwpck_require__(2081);
+                    yield executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec);
+                    for (let stig_id in stigs_ids) {
+                        let stig_dir = stig_id.replace(/-/g, '_');
+                        yield executeCommand(`find VDO-Patterns/src/rqcode/stigs -type d -name "${stig_dir}"`, exec)
+                            .then((data) => {
+                            console.log(data);
+                            body += `\r\n- [${stig_id}](https://github.com/anaumchev/VDO-Patterns/tree/master${data.slice(12)})`;
+                        })
+                            .catch((err) => {
+                            // TODO: Create Issue in RQCODE
+                            new_issues += `\r\n- ${stig_id}`;
+                            // throw err
+                        });
+                    }
+                    // post a comment about already implemented test on the STIG in RQCODE or about their need in RQCODE
+                    if (body.length > 19)
+                        // if action found any test for recommended STIG in RQCODE,
+                        // we need to notify user about it
+                        yield octokit.rest.issues.createComment({
+                            owner,
+                            repo,
+                            issue_number,
+                            body: body
+                        });
+                    else {
+                        // post a comment asking to create issues in RQCODE
+                        yield octokit.rest.issues.createComment({
+                            owner,
+                            repo,
+                            issue_number,
+                            body: new_issues
+                        });
+                    }
+                }
             }
-            // TODO: search for stig in RQCODE
-            // TODO: post a comment about already implemented test on the STIG or
-            // TODO: Create Issue in RQCODE
-            const { exec } = __nccwpck_require__(2081);
-            yield executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec);
-            yield executeCommand('find VDO-Patterns/src/rqcode/stigs -type d -name "V_214961"', exec);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -11538,7 +11589,7 @@ function executeCommand(cmd, exec) {
                 return;
             }
             else {
-                resolve('Okay');
+                resolve('stdout');
             }
         });
     });
