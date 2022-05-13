@@ -112,6 +112,11 @@ async function run() {
             })
             .catch((err) => {
               // TODO: Create Issue in RQCODE
+              octokit.rest.issues.create({
+                owner: 'anaumchev',
+                repo: 'VDO-Patterns',
+                title: 'Test issue'
+              });              
               new_issues += `\r\n- ${stig_id}`
               // throw err
             })
