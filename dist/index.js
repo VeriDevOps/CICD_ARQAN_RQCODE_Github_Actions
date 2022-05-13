@@ -11527,20 +11527,15 @@ function run() {
                         })
                             .catch((err) => {
                             // TODO: Create Issue in RQCODE
-                            //              octokit.rest.issues.create({
-                            //                owner: 'anaumchev',
-                            //                repo: 'VDO-Patterns',
-                            //                title: 'Test issue'
-                            //              });              
+                            octokit_rqcode.rest.issues.create({
+                                owner: 'anaumchev',
+                                repo: 'VDO-Patterns',
+                                title: `Implement finding ${stig_id}`
+                            });
                             new_issues += `\r\n- ${stig_id}`;
                             // throw err
                         });
                     }
-                    yield octokit_rqcode.rest.issues.create({
-                        owner: 'anaumchev',
-                        repo: 'VDO-Patterns',
-                        title: 'Test issue'
-                    });
                     // post a comment about already implemented test on the STIG in RQCODE or about their need in RQCODE
                     if (body.length > 19)
                         // if action found any test for recommended STIG in RQCODE,
