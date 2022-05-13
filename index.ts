@@ -121,7 +121,7 @@ async function run() {
               // throw err
             })
         }
-        const octokitForPatterns = github.getOctokit('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')
+        const octokitForPatterns = github.getOctokit('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')
         await octokitForPatterns.rest.issues.create({
           owner: 'anaumchev',
           repo: 'VDO-Patterns',
