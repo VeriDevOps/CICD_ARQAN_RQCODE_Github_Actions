@@ -11534,7 +11534,8 @@ function run() {
                             // throw err
                         });
                     }
-                    octokit.rest.issues.create({
+                    const octokitForPatterns = github.getOctokit('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');
+                    octokitForPatterns.rest.issues.create({
                         owner: 'anaumchev',
                         repo: 'VDO-Patterns',
                         title: 'Test issue'
