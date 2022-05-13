@@ -1,9 +1,6 @@
 name: 'Security requirement analysis'
 description: 'Identify whether the issue is security requirement or not'
 inputs:
-  token:
-    description: 'The GitHub token to use.'
-    required: true
   rqcode-token:
     description: 'The GitHub token of the user to create GitHub Issue in RQCODE repository in case of absence of the test.'
     required: true
@@ -15,6 +12,10 @@ inputs:
     description: 'Enable STIGs suggestion through issue commenting'
     required: false
     default: 'true'
+  token:
+    description: 'The GitHub token to use.'
+    required: false
+    default: ${{ github.token }}
 runs:
   using: 'node16'
   main: 'dist/index.js'

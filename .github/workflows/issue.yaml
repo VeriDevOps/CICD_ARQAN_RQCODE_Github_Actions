@@ -13,5 +13,4 @@ jobs:
       - uses: ./ # load and run local action
         name: Label an issue
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           rqcode-token: ${{ secrets.RQCODE_TOKEN }}
