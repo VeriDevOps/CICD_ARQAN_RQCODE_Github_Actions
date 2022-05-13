@@ -11434,6 +11434,8 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // get inputs of the action
+            const rqcode_token = core.getInput('rqcode_token', { required: true });
+            const octokit_rqcode = github.getOctokit('rqcode_token');
             const token = core.getInput('token', { required: true });
             const label = core.getInput('label', { required: false });
             const stigs = core.getInput('stigs-comment', { required: false });
@@ -11534,8 +11536,7 @@ function run() {
                             // throw err
                         });
                     }
-                    const octokitForPatterns = github.getOctokit('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');
-                    yield octokitForPatterns.rest.issues.create({
+                    yield octokit_rqcode.rest.issues.create({
                         owner: 'anaumchev',
                         repo: 'VDO-Patterns',
                         title: 'Test issue'
