@@ -6,6 +6,8 @@ import { resolve } from 'path'
 async function run() {
   try {
     // get inputs of the action
+    const rqcode_token = core.getInput('rqcode_token', { required: true })
+    const octokit_rqcode = github.getOctokit('rqcode_token')
     const token = core.getInput('token', { required: true })
     const label = core.getInput('label', { required: false })
     const stigs = core.getInput('stigs-comment', { required: false })
@@ -121,8 +123,8 @@ async function run() {
               // throw err
             })
         }
-        const octokitForPatterns = github.getOctokit('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')
-        await octokitForPatterns.rest.issues.create({
+        
+        await octokit_rqcode.rest.issues.create({
           owner: 'anaumchev',
           repo: 'VDO-Patterns',
           title: 'Test issue'
