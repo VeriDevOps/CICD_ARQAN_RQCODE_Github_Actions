@@ -14,3 +14,4 @@ jobs:
         name: Label an issue
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          rqcode_token: ${{ secrets.RQCODE_TOKEN }}
