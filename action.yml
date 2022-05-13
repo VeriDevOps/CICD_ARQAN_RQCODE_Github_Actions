@@ -4,6 +4,9 @@ inputs:
   token:
     description: 'The GitHub token to use.'
     required: true
+  rqcode-token:
+    description: 'The GitHub token of the user to create GitHub Issue in RQCODE repository in case of absence of the test.'
+    required: true
   label:
     description: 'Label of security requirement'
     required: false

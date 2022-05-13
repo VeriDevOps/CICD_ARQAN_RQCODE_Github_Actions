@@ -1,27 +1,27 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import axios, { AxiosResponse } from 'axios'
-import { resolve } from 'path'
 
 async function run() {
   try {
     // get inputs of the action
-    const rqcode_token = core.getInput('rqcode_token', { required: true })
-    const octokit_rqcode = github.getOctokit(rqcode_token)
     const token = core.getInput('token', { required: true })
+    const rqcode_token = core.getInput('rqcode-token', { required: true })
     const label = core.getInput('label', { required: false })
     const stigs = core.getInput('stigs-comment', { required: false })
+
     // get repo context
     const owner = github.context.repo.owner
     const repo = github.context.repo.repo
+
     // get issue context
     const issue_number = getIssueNumber()
     const issue_title = getIssueTitle()
     const issue_body = getIssueBody()
+
     // check whether issue exists
     if (issue_number === undefined || issue_title === undefined) {
-      console.log('Could not get issue number or issue title from context, exiting')
-      return
+      throw new Error('Could not get issue number or issue title from context, exiting')
     }
 
     // A client to load data from GitHub
@@ -46,15 +46,21 @@ async function run() {
           return response
         },
         (error) => {
-          console.log(error)
-          return error
+          throw new Error(
+            `Received ${error.response.status} status code from ARQAN Classification Service for input: ${issue_text}.`
+          )
         }
       )
     let security_sentences: Array<string> = result.data.security_text
+    let security_requirement: Boolean = false
 
     // if answer from api has elements in the array,
     // then issue is security requirement
     if (security_sentences.length) {
+      console.log('ARQAN Classification Service encounters the current issue as security requirement.')
+      security_requirement = true
+
+      console.log(`Setting label "${label}" on the current issue`)
       await octokit.rest.issues.addLabels({
         owner,
         repo,
@@ -63,7 +69,10 @@ async function run() {
       })
     }
 
-    if (stigs === 'true') {
+    // Run suggestion of STIGs and test cases if:
+    // 1. User specified input STIGs as true
+    // 2. ARQAN Classification Service encounters issue as security requirement
+    if (stigs === 'true' && security_requirement === true) {
       // TODO: Make actual API call when API will be ready
       // fake api response
       let response = ['https://www.stigviewer.com/stig/canonical_ubuntu_16.04_lts/2020-12-09/finding/V-214961']
@@ -97,34 +106,39 @@ async function run() {
         })
 
         // INTERACTION with RQCODE repository goes here
+        const rqcode_repo = {
+          owner: 'anaumchev',
+          repo: 'VDO-Patterns',
+          link: 'https://github.com/anaumchev/VDO-Patterns.git'
+        }
 
         // search for stig in RQCODE
         body = 'Recommended RQCODE:'
-        let new_issues =
-          'Report about not realized tests for STIGs in [RQCODE](https://github.com/anaumchev/VDO-Patterns.git):'
+        let new_issues = `Report about not realized tests for STIGs in [RQCODE](${rqcode_repo.link}):`
         const { exec } = require('child_process')
-        await executeCommand('git clone https://github.com/anaumchev/VDO-Patterns.git', exec)
+        await executeCommand(`git clone ${rqcode_repo}`, exec)
+
+        // A client to create issue in RQCODE GitHub Repository in case of absence of suggested STIGs Test cases
+        const octokit_rqcode = github.getOctokit(rqcode_token)
 
         for (let stig_id of stigs_ids) {
           let stig_dir = stig_id.replace(/-/g, '_')
-          await executeCommand(`find VDO-Patterns/src/rqcode/stigs -type d -name "${stig_dir}"`, exec)
+          await executeCommand(`find ${rqcode_repo.repo}/src/rqcode/stigs -type d -name "${stig_dir}"`, exec)
             .then((data) => {
-              console.log(data)
-              body += `\r\n- [${stig_id}](https://github.com/anaumchev/VDO-Patterns/tree/master${data.slice(12)})`
+              body += `\r\n- [${stig_id}](${rqcode_repo.link.slice(0, 40)}/tree/master${data.slice(12)})`
             })
             .catch((err) => {
-              // TODO: Create Issue in RQCODE
+              // Create Issue in RQCODE in case of absence of test on stig_id
               octokit_rqcode.rest.issues.create({
-                owner: 'anaumchev',
-                repo: 'VDO-Patterns',
+                owner: rqcode_repo.owner,
+                repo: rqcode_repo.repo,
                 title: `Implement finding ${stig_id}`
-              });      
+              })
               new_issues += `\r\n- ${stig_id}`
               // throw err
             })
         }
-                  
-        
+
         // post a comment about already implemented test on the STIG in RQCODE or about their need in RQCODE
         if (body.length > 19)
           // if action found any test for recommended STIG in RQCODE,
