@@ -11457,7 +11457,7 @@ function run() {
                     : issue_body
                 : issue_body == null
                     ? issue_title
-                    : issue_title + issue_body;
+                    : issue_title + ' ' + issue_body;
             console.log('Issue full text: ', issue_text);
             // API call to ARQAN to classify the requirement
             let result = yield axios_1.default
@@ -11524,7 +11524,7 @@ function run() {
                     };
                     // search for stig in RQCODE
                     body = 'Recommended RQCODE:';
-                    let new_issues = `Report about not realized tests for STIGs in [RQCODE](${rqcode_repo.link}):`;
+                    let new_issues = `Created issues about not realized tests for STIGs in [RQCODE](${rqcode_repo.link}):`;
                     const { exec } = __nccwpck_require__(2081);
                     yield executeCommand(`git clone ${rqcode_repo}`, exec);
                     // A client to create issue in RQCODE GitHub Repository in case of absence of suggested STIGs Test cases
@@ -11535,18 +11535,19 @@ function run() {
                             .then((data) => {
                             body += `\r\n- [${stig_id}](${rqcode_repo.link.slice(0, 40)}/tree/master${data.slice(12)})`;
                         })
-                            .catch((err) => {
+                            .catch((err) => __awaiter(this, void 0, void 0, function* () {
                             // Create Issue in RQCODE in case of absence of test on stig_id
-                            octokit_rqcode.rest.issues.create({
+                            let { data: { url } } = yield octokit_rqcode.rest.issues.create({
                                 owner: rqcode_repo.owner,
                                 repo: rqcode_repo.repo,
                                 title: `Implement finding ${stig_id}`
                             });
-                            new_issues += `\r\n- ${stig_id}`;
-                            // throw err
-                        });
+                            new_issues += `\r\n- [${stig_id}](${url})`;
+                        }));
                     }
-                    // post a comment about already implemented test on the STIG in RQCODE or about their need in RQCODE
+                    // Post a comment about already implemented test on the STIG in RQCODE or about their need in RQCODE
+                    // if body contains more than 19 symbols of content,
+                    // then it means that there is at least one STIG test that is realized in RQCODE
                     if (body.length > 19)
                         // if action found any test for recommended STIG in RQCODE,
                         // we need to notify user about it
@@ -11556,7 +11557,9 @@ function run() {
                             issue_number,
                             body: body
                         });
-                    else {
+                    // if new_issues contains more than 109 symbols of content,
+                    // then it means that there is at least one STIG test that is not realized in RQCODE
+                    if (new_issues.length > 109) {
                         // post a comment asking to create issues in RQCODE
                         yield octokit.rest.issues.createComment({
                             owner,
