@@ -11435,7 +11435,7 @@ function run() {
         try {
             // get inputs of the action
             const rqcode_token = core.getInput('rqcode_token', { required: true });
-            const octokit_rqcode = github.getOctokit('rqcode_token');
+            const octokit_rqcode = github.getOctokit(rqcode_token);
             const token = core.getInput('token', { required: true });
             const label = core.getInput('label', { required: false });
             const stigs = core.getInput('stigs-comment', { required: false });
