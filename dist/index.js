@@ -11434,8 +11434,8 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // get inputs of the action
-            const token = core.getInput('token', { required: true });
             const rqcode_token = core.getInput('rqcode-token', { required: true });
+            const token = core.getInput('token', { required: false });
             const label = core.getInput('label', { required: false });
             const stigs = core.getInput('stigs-comment', { required: false });
             // get repo context
