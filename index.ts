@@ -116,7 +116,7 @@ async function run() {
         body = 'Recommended RQCODE:'
         let new_issues = `Created issues about not realized tests for STIGs in [RQCODE](${rqcode_repo.link}):`
         const { exec } = require('child_process')
-        await executeCommand(`git clone ${rqcode_repo}`, exec)
+        await executeCommand(`git clone ${rqcode_repo.link}`, exec)
 
         // A client to create issue in RQCODE GitHub Repository in case of absence of suggested STIGs Test cases
         const octokit_rqcode = github.getOctokit(rqcode_token)
