@@ -11526,7 +11526,7 @@ function run() {
                     body = 'Recommended RQCODE:';
                     let new_issues = `Created issues about not realized tests for STIGs in [RQCODE](${rqcode_repo.link}):`;
                     const { exec } = __nccwpck_require__(2081);
-                    yield executeCommand(`git clone ${rqcode_repo}`, exec);
+                    yield executeCommand(`git clone ${rqcode_repo.link}`, exec);
                     // A client to create issue in RQCODE GitHub Repository in case of absence of suggested STIGs Test cases
                     const octokit_rqcode = github.getOctokit(rqcode_token);
                     for (let stig_id of stigs_ids) {
