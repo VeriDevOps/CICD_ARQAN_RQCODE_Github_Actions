@@ -22,7 +22,7 @@
   "homepage": "https://github.com/VeriDevOps/security-requirement-analysis#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "@actions/github": "^5.0.0",
+    "@actions/github": "^5.0.3",
     "@vercel/ncc": "^0.33.4",
     "axios": "^0.27.2",
     "typescript": "^4.6.4"
