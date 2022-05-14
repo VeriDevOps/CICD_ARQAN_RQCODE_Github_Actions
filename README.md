@@ -1,6 +1,7 @@
 # Security Requirement Analysis GitHub Action
 
 [![GitHub license](https://shields.io/badge/license-Apache%202-green?style=for-the-badge)](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/LICENSE)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=for-the-badge)](code_of_conduct.md)
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
 A GitHub Action to analyze your security requirements that are represented in the form of GitHub Issues. If Action classifies Issue as a security requirement, then it sets a label on it. Additionally, it recommends [Security Technical Implementation Guides(STIGs)](https://www.stigviewer.com) that cover the requirement. Moreover, it suggests already implemented tests on the recommended STIGs from [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns). In case of tests absence on proposed STIGs, automatically creates Issue in [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns) asking to implement it.
@@ -44,8 +45,18 @@ The solution is to [manually create a PAT](https://docs.github.com/en/authentica
 
 ### `stigs-comment`
 
-**Optional.** Enable STIGs and tests from [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns) suggestion through issue commenting. **Default**: `'true'`
+**Optional.** Enable STIGs and tests suggestion from [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns) through issue commenting. **Default**: `'true'`
 
 ### `token`
 
 **Optional.** A github token used for creating an octoclient for making API calls for labeling and commenting Issues. If you want to use another user, you can specify its token. **Default**: `${{ github.token }}`
+
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for step-by-step instructions.
+
+If you need help or have a question, let us know via a [GitHub issue](https://github.com/VeriDevOps/security-requirement-analysis/issues/new/choose) with type `Question`.
+
+## License
+
+This project is licensed under the Apache License - see the [LICENSE](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/LICENSE) file for details.
