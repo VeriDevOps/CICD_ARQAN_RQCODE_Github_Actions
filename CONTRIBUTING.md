@@ -43,9 +43,22 @@ This project and everyone participating in it is governed by the [Security Requi
 2. Configure and install the dependencies:
    1. In the project we use **Node v16.14.0** with **npm v8.3.1**. Use [nvm tool](https://github.com/nvm-sh/nvm) to easily control different versions of Node. Or install [manually](https://nodejs.org/en/download/releases/).
    2. Install dependencies via: `npm install`.
-3. Make your change, build with `npm run prettier && npm run build`.
-4. Push to your fork and [submit a pull request](https://github.com/veridevops/security-requirement-analysis/compare). Ensure the PR description clearly describes the problem/new feature and solution. Include the relevant issue number if applicable.
-5. Wait for your pull request to be reviewed and merged.
+3. Make your change to the code under `src/` folder. Try preserve the structure:
+   | File name | Description|
+   | --- | --- |
+   | [index.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/index.ts)| It is a main file. It has a function `run()` that is responsible for the whole action.
+   | [apiService.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/apiService.ts)| Contains functions that are responsible to make API calls to ARQAN model or other services outside the GitHub. |
+   | [github.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/github.ts) | Contains functions that are working with github context. |
+   | [interfaces.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/interfaces.ts) | Contains all interfaces that are used in the code. |
+   | [requirement.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/requirement.ts) | Contains all logic that is connected with classification Issue as a requirement and suggestion appropriate STIGs to it. |
+   | [rqcode.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/rqcode.ts) | Contains all logic that is connected with [VDO-Patterns](https://github.com/anaumchev/VDO-Patterns.git) repository: searching test cases for the list of STIGs, commenting about found tests, opening issues in [VDO-Patterns](https://github.com/anaumchev/VDO-Patterns.git) and commenting about opened issues. |
+
+   **NOTE**: If you add another file for covering your logic, update the table above accordingly, please.
+
+4. If you added new input or output for the action, make sure you have updated the [action.yml](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/action.yml). See the [documentation](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions).
+5. Build your code with `npm run prettier && npm run build`.
+6. Push to your fork and [submit a pull request](https://github.com/veridevops/security-requirement-analysis/compare). Ensure the PR description clearly describes the problem/new feature and solution. Include the relevant issue number if applicable.
+7. Wait for your pull request to be reviewed and merged.
 
 Here are a few things you can do that will increase the likelihood of your pull request being accepted:
 
