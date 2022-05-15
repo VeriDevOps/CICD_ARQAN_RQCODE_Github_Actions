@@ -66,14 +66,14 @@ namespace Rqcode {
     const octokit = getOctokit(token)
     for (let stig of stigs) {
       const {
-        data: { url }
+        data: { html_url }
       } = await octokit.rest.issues.create({
         owner: rqcodeRepo.owner,
         repo: rqcodeRepo.repo,
-        title: `Implement finding [${stig.id}]`,
+        title: `Implement finding ${stig.id}`,
         body: `${stig.url}`
       })
-      issuesUrls.push({ id: stig.id, url: stig.url, issueUrl: url })
+      issuesUrls.push({ id: stig.id, url: stig.url, issueUrl: html_url })
     }
     return issuesUrls
   }
