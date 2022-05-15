@@ -24,7 +24,7 @@ namespace Rqcode {
           found.push({
             id: stig.id,
             url: stig.url,
-            rqcode: `${rqcodeRepo.url.slice(0, 40)}/tree/master${data.slice(12)}`
+            rqcode: `${rqcodeRepo.url.slice(0, 41)}/tree/master${data.slice(12)}`
           })
         })
         .catch((err) => {
@@ -42,7 +42,7 @@ namespace Rqcode {
   ) {
     // construct comment with found test cases in RQCODE for recommended STIGs
     let comment = `See [RQCODE](${rqcodeRepo.url}) tests for recommended STIGs :smiley: :`
-    if (tests) {
+    if (tests.length) {
       for (let test of tests) {
         comment += `\r\n- [${test.id}](${test.rqcode})`
       }
@@ -84,7 +84,7 @@ namespace Rqcode {
     issueNumber: number,
     token: string
   ) {
-    if (issues) {
+    if (issues.length) {
       // construct comment with missing test cases for recommended STIGs
       // and associated opened issues accordingly in RQCODE
       let comment = `Created issues about not realized tests for STIGs in [RQCODE](${rqcodeRepo.url}):`
