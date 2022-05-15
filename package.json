@@ -2,19 +2,23 @@
   "name": "security-requirement-analysis",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier --write index.ts",
-    "watch": "ncc build index.ts --watch",
-    "build": "ncc build index.ts --license LICENSE --minify -o dist"
+    "prettier": "prettier --write src/",
+    "watch": "ncc build src/index.ts --watch",
+    "build": "ncc build src/index.ts --license LICENSE --minify -o dist"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VeriDevOps/security-requirement-analysis.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "Actions",
+    "GitHub",
+    "JavaScript"
+  ],
+  "author": "Rufina Talalaeva <r.talalaeva@innopolis.university>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/VeriDevOps/security-requirement-analysis/issues"
