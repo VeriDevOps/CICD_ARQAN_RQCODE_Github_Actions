@@ -24,7 +24,7 @@ namespace Rqcode {
           found.push({
             id: stig.id,
             url: stig.url,
-            rqcode: `${rqcodeRepo.url.slice(0, 41)}/tree/master${data.slice(12)}`
+            rqcode: `${rqcodeRepo.url.slice(0, 36)}/tree/master${data.slice(6)}`
           })
         })
         .catch((err) => {
