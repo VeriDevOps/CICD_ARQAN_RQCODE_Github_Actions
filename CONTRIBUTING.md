@@ -51,7 +51,7 @@ This project and everyone participating in it is governed by the [Security Requi
    | [github.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/github.ts) | Contains functions that are working with github context. |
    | [interfaces.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/interfaces.ts) | Contains all interfaces that are used in the code. |
    | [requirement.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/requirement.ts) | Contains all logic that is connected with classification Issue as a requirement and suggestion appropriate STIGs to it. |
-   | [rqcode.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/rqcode.ts) | Contains all logic that is connected with [VDO-Patterns](https://github.com/anaumchev/VDO-Patterns.git) repository: searching test cases for the list of STIGs, commenting about found tests, opening issues in [VDO-Patterns](https://github.com/anaumchev/VDO-Patterns.git) and commenting about opened issues. |
+   | [rqcode.ts](https://github.com/VeriDevOps/security-requirement-analysis/blob/main/src/rqcode.ts) | Contains all logic that is connected with [RQCODE](https://github.com/VeriDevOps/RQCODE.git) repository: searching test cases for the list of STIGs, commenting about found tests, opening issues in [RQCODE](https://github.com/VeriDevOps/RQCODE.git) and commenting about opened issues. |
 
    **NOTE**: If you add another file for covering your logic, update the table above accordingly, please.
 

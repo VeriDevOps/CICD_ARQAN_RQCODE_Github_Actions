@@ -4,7 +4,7 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=for-the-badge)](code_of_conduct.md)
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-A GitHub Action to analyze your security requirements that are represented in the form of GitHub Issues. If Action classifies Issue as a security requirement, then it sets a label on it. Additionally, it recommends [Security Technical Implementation Guides(STIGs)](https://www.stigviewer.com) that cover the requirement. Moreover, it suggests already implemented tests on the recommended STIGs from [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns). In case of tests absence on proposed STIGs, automatically creates Issue in [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns) asking to implement it.
+A GitHub Action to analyze your security requirements that are represented in the form of GitHub Issues. If Action classifies Issue as a security requirement, then it sets a label on it. Additionally, it recommends [Security Technical Implementation Guides(STIGs)](https://www.stigviewer.com) that cover the requirement. Moreover, it suggests already implemented tests on the recommended STIGs from [RQCODE repository](https://github.com/VeriDevOps/RQCODE). In case of tests absence on proposed STIGs, automatically creates Issue in [RQCODE repository](https://github.com/VeriDevOps/RQCODE) asking to implement it.
 
 ## Usage
 
@@ -35,7 +35,7 @@ jobs:
 
 ### `rqcode-token`
 
-**Required.** A GitHub access token (PAT) with public_repo access in the repo scope. **NOTE.** The automatically provided token e.g. `${{ secrets.GITHUB_TOKEN }}` can not be used, GitHub prevents this token from being able to create issues in other repositories(in our case, [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns)). [The reasons are explained in the GitHub Community Forum](https://github.community/t/what-permission-level-do-i-need-to-create-issues-using-pat/124769).
+**Required.** A GitHub access token (PAT) with public_repo access in the repo scope. **NOTE.** The automatically provided token e.g. `${{ secrets.GITHUB_TOKEN }}` can not be used, GitHub prevents this token from being able to create issues in other repositories(in our case, [RQCODE repository](https://github.com/VeriDevOps/RQCODE)). [The reasons are explained in the GitHub Community Forum](https://github.community/t/what-permission-level-do-i-need-to-create-issues-using-pat/124769).
 
 The solution is to [manually create a PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and [store it as a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) e.g. `${{ secrets.RQCODE_TOKEN }}`
 
@@ -45,7 +45,7 @@ The solution is to [manually create a PAT](https://docs.github.com/en/authentica
 
 ### `stigs-comment`
 
-**Optional.** Enable STIGs and tests suggestion from [VDO-Patterns repository](https://github.com/anaumchev/VDO-Patterns) through issue commenting. **Default**: `'true'`
+**Optional.** Enable STIGs and tests suggestion from [RQCODE repository](https://github.com/VeriDevOps/RQCODE) through issue commenting. **Default**: `'true'`
 
 ### `token`
 

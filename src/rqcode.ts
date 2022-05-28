@@ -3,9 +3,9 @@ import { getOctokit } from '@actions/github'
 
 namespace Rqcode {
   const rqcodeRepo = {
-    owner: 'anaumchev',
-    repo: 'VDO-Patterns',
-    url: 'https://github.com/anaumchev/VDO-Patterns.git'
+    owner: 'VeriDevOps',
+    repo: 'RQCODE',
+    url: 'https://github.com/VeriDevOps/RQCODE.git'
   }
 
   export async function cloneRepo() {
