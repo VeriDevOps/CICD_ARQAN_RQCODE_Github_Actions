@@ -73,7 +73,7 @@ This section lists the labels we use to help us track and manage issues and pull
 
 #### Type of Issue and Issue State
 
-| Label name         | `Hydrospheredata/hydro-monitoring` :mag_right:                                                                                            | Description                                                                                                                                      |
+| Label name         | `VeriDevOps/security-requirement-analysis` :mag_right:                                                                                            | Description                                                                                                                                      |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `enhancement`      | [search](https://github.com/search?q=is%3Aopen+is%3Aissue+repo%3AVeriDevOps%2Fsecurity-requirement-analysis+label%3Aenhancement)          | Feature requests.                                                                                                                                |
 | `bug`              | [search](https://github.com/search?q=is%3Aopen+is%3Aissue+repo%3AVeriDevOps%2Fsecurity-requirement-analysis+label%3Abug)                  | Confirmed bugs or reports that are very likely to be bugs.                                                                                       |
