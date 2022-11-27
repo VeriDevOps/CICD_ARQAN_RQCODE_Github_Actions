@@ -13,6 +13,8 @@ async function run(): Promise<void> {
     const stigs = getInput('stigs-comment', { required: false })
     const platform = sanitizeUrl(getInput('platform', { required: false }))
 
+    console.log('Platform: ' + platform)
+
     // get repo context
     const repo = getRepo()
 
