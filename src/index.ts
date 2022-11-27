@@ -10,6 +10,7 @@ async function run(): Promise<void> {
     const token = getInput('token', { required: false })
     const label = getInput('label', { required: false })
     const stigs = getInput('stigs-comment', { required: false })
+    const platform = getInput('platform', { required: false })
 
     // get repo context
     const repo = getRepo()
@@ -19,13 +20,13 @@ async function run(): Promise<void> {
     console.log('Issue content: ', issue.content)
 
     const isSecurity = await Requirement.isSecurity(issue.content)
-    if (isSecurity) Requirement.setIssueLabel(repo, issue.number, label, token)
+    if (isSecurity) await Requirement.setIssueLabel(repo, issue.number, label, token)
 
     // Run suggestion of STIGs and test cases if:
     // 1. User specified input STIGs as true
     // 2. ARQAN Classification Service encounters issue as security requirement
-    if (stigs === 'true' && isSecurity === true) {
-      const recommendedStigs = await Requirement.getStigs(issue.content)
+    if (stigs === 'true' && isSecurity) {
+      const recommendedStigs = await Requirement.getStigs(issue.content, platform)
       if (recommendedStigs) {
         await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 

@@ -41,6 +41,5 @@ export const getIssue = (): { number: number; content: string } => {
 }
 
 export const getRepo = (): { owner: string; repo: string } => {
-  const repo = context.repo
-  return repo
+  return context.repo
 }

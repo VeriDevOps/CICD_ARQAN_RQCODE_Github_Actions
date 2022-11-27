@@ -18,7 +18,7 @@ namespace Requirement {
 
     // if answer from api has elements in the array,
     // then issue is security requirement
-    return securitySentences.length ? true : false
+    return !!securitySentences.length
   }
 
   export async function setIssueLabel(
@@ -39,11 +39,11 @@ namespace Requirement {
     })
   }
 
-  export async function getStigs(requirement: string): Promise<Stig[]> {
+  export async function getStigs(requirement: string, platform: string): Promise<Stig[]> {
     // array for STIGs to the particular requirement
     let stigs: Array<Stig> = []
 
-    let stig_urls = await ApiService.getRecommendedStigs(requirement)
+    let stig_urls = await ApiService.getRecommendedStigs(requirement, platform)
     if (stig_urls.length) {
       for (let url of stig_urls) {
         // get STIG ID from the url
