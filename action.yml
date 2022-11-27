@@ -16,6 +16,10 @@ inputs:
     description: 'The GitHub token to use.'
     required: false
     default: ${{ github.token }}
+  platform:
+    description: 'Platform for STIGs'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
