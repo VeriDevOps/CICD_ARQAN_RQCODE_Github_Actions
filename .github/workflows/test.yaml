@@ -17,3 +17,4 @@ jobs:
         name: Label an issue
         with:
           rqcode-token: ${{ secrets.RQCODE_TOKEN }}
+          platform: macos
