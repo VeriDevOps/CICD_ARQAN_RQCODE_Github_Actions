@@ -44,15 +44,17 @@ namespace Requirement {
     let stigs: Array<Stig> = []
 
     let stig_urls = await ApiService.getRecommendedStigs(requirement, platform)
-    if (stig_urls.length) {
-      for (let url of stig_urls) {
-        // get STIG ID from the url
-        let stig_id = url.split('/').pop()
-        if (stig_id) {
-          stigs.push({ id: stig_id, url: url })
-        } else {
-          throw new Error(`Couldn't get STIG ID from the url: ${url} returned by ARQAN`)
-        }
+    if (Object.keys(stig_urls).length === 0) {
+      return stigs
+    }
+    for (let key in stig_urls) {
+      // get STIG ID from the url
+      let url = stig_urls[key]
+      let stig_id = url.split('/').pop()
+      if (stig_id) {
+        stigs.push({ id: stig_id, url: url })
+      } else {
+        throw new Error(`Couldn't get STIG ID from the url: ${url} returned by ARQAN`)
       }
     }
     return stigs
