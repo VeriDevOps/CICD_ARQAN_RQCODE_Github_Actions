@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/VeriDevOps/security-requirement-analysis#readme",
   "dependencies": {
-    "@actions/core": "^1.9.1",
+    "@actions/core": "^1.10.0",
     "@actions/github": "^5.0.3",
     "@braintree/sanitize-url": "^6.0.2",
     "@vercel/ncc": "^0.33.4",
