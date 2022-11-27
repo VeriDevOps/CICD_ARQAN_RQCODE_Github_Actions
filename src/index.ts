@@ -1,4 +1,5 @@
 import { getInput, setFailed } from '@actions/core'
+import { sanitizeUrl } from "@braintree/sanitize-url";
 import { getRepo, getIssue } from './github'
 import Requirement from './requirement'
 import Rqcode from './rqcode'
@@ -10,7 +11,7 @@ async function run(): Promise<void> {
     const token = getInput('token', { required: false })
     const label = getInput('label', { required: false })
     const stigs = getInput('stigs-comment', { required: false })
-    const platform = getInput('platform', { required: false })
+    const platform = sanitizeUrl(getInput('platform', { required: false }))
 
     // get repo context
     const repo = getRepo()
