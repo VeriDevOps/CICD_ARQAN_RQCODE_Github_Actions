@@ -22,6 +22,7 @@ async function run(): Promise<void> {
     const issue = getIssue()
     console.log('Issue content: ', issue.content)
 
+    // Api is down
     const isSecurity = await Requirement.isSecurity(issue.content)
     if (isSecurity) await Requirement.setIssueLabel(repo, issue.number, label, token)
 
@@ -29,13 +30,14 @@ async function run(): Promise<void> {
     // 1. User specified input STIGs as true
     // 2. ARQAN Classification Service encounters issue as security requirement
     if (stigs === 'true' && isSecurity) {
+      // Api is down
       const recommendedStigs = await Requirement.getStigs(issue.content, platform)
       if (recommendedStigs) {
         await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 
         // INTERACTION with RQCODE repository goes here
         await Rqcode.cloneRepo()
-        const tests = await Rqcode.findTests(recommendedStigs)
+        const tests = await Rqcode.findTests(recommendedStigs, platform)
         await Rqcode.commentFoundTests(tests.found, repo, issue.number, token)
         const openedIssues = await Rqcode.openIssues(tests.missing, rqcodeToken)
         await Rqcode.commentMissingTests(openedIssues, repo, issue.number, token)
