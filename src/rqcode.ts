@@ -21,11 +21,15 @@ namespace Rqcode {
       const stigDir = stig.id.replace(/-/g, '_')
       await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs -type d -name "${stigDir}"`, exec)
         .then((data) => {
-          found.push({
-            id: stig.id,
-            url: stig.url,
-            rqcode: `${rqcodeRepo.url.slice(0, 36)}/tree/master${data.slice(6)}`
-          })
+          if (data) {
+            found.push({
+              id: stig.id,
+              url: stig.url,
+              rqcode: `${rqcodeRepo.url.slice(0, 36)}/tree/master${data.slice(6)}`
+            })
+          } else {
+            missing.push(stig)
+          }
         })
         .catch((err) => {
           missing.push(stig)
