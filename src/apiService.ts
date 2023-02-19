@@ -2,9 +2,11 @@ import axios from 'axios'
 
 namespace ApiService {
   export async function getSecuritySentences(requirement: string) {
+    console.log('Making call to ARQAN')
     const response = await axios.post('http://51.178.12.108:8502/text', requirement, {
       headers: { 'Content-type': 'text/plain;' }
     })
+    console.log('Response data: ', response.data)
     return response.data
   }
 

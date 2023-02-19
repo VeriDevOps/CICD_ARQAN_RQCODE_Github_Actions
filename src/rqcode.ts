@@ -13,13 +13,13 @@ namespace Rqcode {
     await executeCommand(`git clone ${rqcodeRepo.url}`, exec)
   }
 
-  export async function findTests(stigs: Stig[]): Promise<{ found: Test[]; missing: Stig[] }> {
+  export async function findTests(stigs: Stig[], platform: string): Promise<{ found: Test[]; missing: Stig[] }> {
     let found: Test[] = []
     let missing: Stig[] = []
     const { exec } = require('child_process')
     for (let stig of stigs) {
       const stigDir = stig.id.replace(/-/g, '_')
-      await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs -type d -name "${stigDir}"`, exec)
+      await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs/${platform} -type d -name "${stigDir}"`, exec)
         .then((data) => {
           if (data) {
             found.push({
@@ -35,6 +35,7 @@ namespace Rqcode {
           missing.push(stig)
         })
     }
+    console.log('Missing', missing)
     return { found, missing }
   }
 
@@ -77,8 +78,10 @@ namespace Rqcode {
         title: `Implement finding ${stig.id}`,
         body: `${stig.url}`
       })
+      console.log('Created issue')
       issuesUrls.push({ id: stig.id, url: stig.url, issueUrl: html_url })
     }
+
     return issuesUrls
   }
 

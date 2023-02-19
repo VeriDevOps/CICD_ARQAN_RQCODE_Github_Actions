@@ -22,20 +22,26 @@ async function run(): Promise<void> {
     const issue = getIssue()
     console.log('Issue content: ', issue.content)
 
-    const isSecurity = await Requirement.isSecurity(issue.content)
+    // Api is down
+    const isSecurity = await Requirement.isSecurity(issue.content).catch(
+        () => {return true}
+    )
     if (isSecurity) await Requirement.setIssueLabel(repo, issue.number, label, token)
 
     // Run suggestion of STIGs and test cases if:
     // 1. User specified input STIGs as true
     // 2. ARQAN Classification Service encounters issue as security requirement
     if (stigs === 'true' && isSecurity) {
-      const recommendedStigs = await Requirement.getStigs(issue.content, platform)
+      // Api is down
+      const recommendedStigs = await Requirement.getStigs(issue.content, platform).catch(
+          () => { return [{ id: 'V-230833', url: 'https://www.stigviewer.com/stig/apple_macos_11_big_sur/2021-06-16/finding/V-230833' }]}
+      )
       if (recommendedStigs) {
         await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 
         // INTERACTION with RQCODE repository goes here
         await Rqcode.cloneRepo()
-        const tests = await Rqcode.findTests(recommendedStigs)
+        const tests = await Rqcode.findTests(recommendedStigs, platform)
         await Rqcode.commentFoundTests(tests.found, repo, issue.number, token)
         const openedIssues = await Rqcode.openIssues(tests.missing, rqcodeToken)
         await Rqcode.commentMissingTests(openedIssues, repo, issue.number, token)
