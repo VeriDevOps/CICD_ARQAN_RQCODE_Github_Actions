@@ -43,17 +43,16 @@ namespace Requirement {
   export async function getStigs(requirement: string, platform: string): Promise<Stig[]> {
     // array for STIGs to the particular requirement
     let stigs: Array<Stig> = []
-
-    let stig_urls = await ApiService.getRecommendedStigs(requirement, platform)
-    if (Object.keys(stig_urls).length === 0) {
+    let response_json = await ApiService.getRecommendedStigs(requirement, platform)
+    if (Object.keys(response_json).length === 0) {
       return stigs
     }
-    for (let key in stig_urls) {
+    for (let stig_text in response_json) {
       // get STIG ID from the url
-      let url = stig_urls[key]
+      let [stig_platform, url] = response_json[stig_text][0]
       let stig_id = url.split('/').pop()
       if (stig_id) {
-        stigs.push({ id: stig_id, url: url })
+        stigs.push({ id: stig_id, url: url, text: stig_text, platform: stig_platform})
       } else {
         throw new Error(`Couldn't get STIG ID from the url: ${url} returned by ARQAN`)
       }
@@ -71,6 +70,7 @@ namespace Requirement {
     let comment = 'Recommended STIG:'
     for (let stig of stigs) {
       comment += `\r\n- [${stig.id}](${stig.url})`
+      comment += `\r\n    - ${stig.text}`
     }
 
     const octokit = getOctokit(token)

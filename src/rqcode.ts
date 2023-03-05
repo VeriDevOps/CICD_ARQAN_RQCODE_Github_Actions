@@ -13,18 +13,20 @@ namespace Rqcode {
     await executeCommand(`git clone ${rqcodeRepo.url}`, exec)
   }
 
-  export async function findTests(stigs: Stig[], platform: string): Promise<{ found: Test[]; missing: Stig[] }> {
+  export async function findTests(stigs: Stig[]): Promise<{ found: Test[]; missing: Stig[] }> {
     let found: Test[] = []
     let missing: Stig[] = []
     const { exec } = require('child_process')
     for (let stig of stigs) {
       const stigDir = stig.id.replace(/-/g, '_')
-      await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs/${platform} -type d -name "${stigDir}"`, exec)
+      await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs/${stig.platform} -type d -name "${stigDir}"`, exec)
         .then((data) => {
           if (data) {
             found.push({
               id: stig.id,
               url: stig.url,
+              platform: stig.platform,
+              text: stig.text,
               rqcode: `${rqcodeRepo.url.slice(0, 36)}/tree/master${data.slice(6)}`
             })
           } else {
@@ -50,6 +52,7 @@ namespace Rqcode {
     if (tests.length) {
       for (let test of tests) {
         comment += `\r\n- [${test.id}](${test.rqcode})`
+        comment += `\r\n     ${test.text}`
       }
     } else {
       comment = `[RQCODE](${rqcodeRepo.url}) doesn't have implemented tests for recommended STIGs currently :pensive:`
@@ -79,7 +82,7 @@ namespace Rqcode {
         body: `${stig.url}`
       })
       console.log('Created issue')
-      issuesUrls.push({ id: stig.id, url: stig.url, issueUrl: html_url })
+      issuesUrls.push({ id: stig.id, url: stig.url, platform: stig.platform, text: stig.text, issueUrl: html_url })
     }
 
     return issuesUrls
