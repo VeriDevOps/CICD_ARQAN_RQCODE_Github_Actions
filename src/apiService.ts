@@ -1,6 +1,8 @@
 import axios from 'axios'
 
 namespace ApiService {
+    const interval = 1000; // set polling interval to 1 second
+    const timeout  = 12000;
 
     export async function getToken(username: string, password: string) {
         console.log('Authenticating in ARQAN')
@@ -15,8 +17,8 @@ namespace ApiService {
             }
         )
         return response.data.access_token
-    }
 
+    }
     export async function getSecuritySentences(requirement: string, token: string) {
         console.log('Making call to ARQAN')
         let response = await axios.post('http://51.250.88.251:8000/api/tasks/sec-req-extract-from-text',
@@ -30,6 +32,7 @@ namespace ApiService {
                 }
             }
         )
+
         const task_id = response.data.task_id
 
         response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
@@ -38,15 +41,19 @@ namespace ApiService {
                 'accept': 'application/json'
             }
         });
-
-        while (response.status === 202) {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before making another request
+        const startTime = new Date().getTime();
+        while (response.status === 202 && new Date().getTime() - startTime < timeout) {
+            await new Promise(resolve => setTimeout(resolve, interval)); // Wait for interval before making another request
             response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'accept': 'application/json'
                 }
             });
+        }
+
+        if (response.status === 202) {
+            throw new Error('Polling timed out');
         }
 
         return response.data
@@ -75,14 +82,20 @@ namespace ApiService {
                 }
             })
 
-        while (response.status === 202) {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before making another request
+        const interval = 1000; // set polling interval to 1 second
+        const startTime = new Date().getTime();
+        while (response.status === 202 && new Date().getTime() - startTime < timeout) {
+            await new Promise(resolve => setTimeout(resolve, interval)); // Wait for interval before making another request
             response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'accept': 'application/json'
                 }
             });
+        }
+
+        if (response.status === 202) {
+            throw new Error('Polling timed out');
         }
 
         return response.data.stig
