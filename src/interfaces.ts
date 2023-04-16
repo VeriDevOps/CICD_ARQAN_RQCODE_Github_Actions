@@ -1,17 +1,17 @@
 export interface Stig {
-  id: string
-  url: string
-  platform: string
-  title: string
-  source: string
-  description: string
-  severity: string
+    id: string
+    url: string
+    platform: string
+    title: string
+    source: string
+    description: string
+    severity: string
 }
 
 export interface Test extends Stig {
-  rqcode: string
+    rqcode: string
 }
 
 export interface StigIssue extends Stig {
-  issueUrl: string
+    issueUrl: string
 }

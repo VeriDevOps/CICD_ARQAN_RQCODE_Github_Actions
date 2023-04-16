@@ -1,90 +1,90 @@
-import { getOctokit } from '@actions/github'
+import {getOctokit} from '@actions/github'
 import ApiService from './apiService'
-import { Stig } from './interfaces'
+import {Stig} from './interfaces'
 
 namespace Requirement {
-  export async function isSecurity(issue: string, token: string): Promise<boolean> {
-    console.log('In isSecurity function')
-    // API call to ARQAN to classify the requirement
-    let securitySentences = await ApiService.getSecuritySentences(issue, token).then(
-      (result) => {
-        return result.requirements
-      },
-      (error) => {
-        throw new Error(
-          `Received ${error.response.status} status code from ARQAN Classification Service for input: ${issue}.`
+    export async function isSecurity(issue: string, token: string): Promise<boolean> {
+        console.log('In isSecurity function')
+        // API call to ARQAN to classify the requirement
+        let securitySentences = await ApiService.getSecuritySentences(issue, token).then(
+            (result) => {
+                return result.requirements
+            },
+            (error) => {
+                throw new Error(
+                    `Received ${error.response.status} status code from ARQAN Classification Service for input: ${issue}.`
+                )
+            }
         )
-      }
-    )
 
-    // if answer from api has elements in the array,
-    // then issue is security requirement
-    return !!securitySentences.length
-  }
-
-  export async function setIssueLabel(
-    repo: { owner: string; repo: string },
-    issueNumber: number,
-    label: string,
-    token: string
-  ): Promise<void> {
-    const octokit = getOctokit(token)
-    console.log('ARQAN Classification Service encounters the current issue as security requirement.')
-
-    console.log(`Setting label "${label}" on the current issue`)
-    await octokit.rest.issues.addLabels({
-      owner: repo.owner,
-      repo: repo.repo,
-      issue_number: issueNumber,
-      labels: [label]
-    })
-  }
-
-  export async function getStigs(requirement: string, platform: string, token: string): Promise<Stig[]> {
-    // array for STIGs to the particular requirement
-    let stigs: Array<Stig> = []
-    let response = await ApiService.getRecommendedStigs(requirement, platform, token)
-    if (response.length === 0) {
-      return stigs
-    }
-    response.forEach( (stig) => {
-     stigs.push(
-         {
-           id: stig['id'],
-           url: stig['url'],
-           platform: stig['platform'],
-           title: stig['title'],
-           source: stig['source'],
-           description: stig['description'],
-           severity: stig['severity']
-         })
-    })
-    return stigs
-  }
-
-  export async function commentRecommendedStigs(
-    stigs: Stig[],
-    repo: { owner: string; repo: string },
-    issueNumber: number,
-    token: string
-  ): Promise<void> {
-    // construct comment with recommended STIGs
-    let comment = 'Recommended STIG:'
-    for (let stig of stigs) {
-      comment += `\r\n- [${stig.id}](${stig.url})`
-      comment += `\r\n    - ${stig.title}`
+        // if answer from api has elements in the array,
+        // then issue is security requirement
+        return !!securitySentences.length
     }
 
-    const octokit = getOctokit(token)
+    export async function setIssueLabel(
+        repo: { owner: string; repo: string },
+        issueNumber: number,
+        label: string,
+        token: string
+    ): Promise<void> {
+        const octokit = getOctokit(token)
+        console.log('ARQAN Classification Service encounters the current issue as security requirement.')
 
-    // post a comment about recommended STIG
-    await octokit.rest.issues.createComment({
-      owner: repo.owner,
-      repo: repo.repo,
-      issue_number: issueNumber,
-      body: comment
-    })
-  }
+        console.log(`Setting label "${label}" on the current issue`)
+        await octokit.rest.issues.addLabels({
+            owner: repo.owner,
+            repo: repo.repo,
+            issue_number: issueNumber,
+            labels: [label]
+        })
+    }
+
+    export async function getStigs(requirement: string, platform: string, token: string): Promise<Stig[]> {
+        // array for STIGs to the particular requirement
+        let stigs: Array<Stig> = []
+        let response = await ApiService.getRecommendedStigs(requirement, platform, token)
+        if (response.length === 0) {
+            return stigs
+        }
+        response.forEach((stig) => {
+            stigs.push(
+                {
+                    id: stig['id'],
+                    url: stig['url'],
+                    platform: stig['platform'],
+                    title: stig['title'],
+                    source: stig['source'],
+                    description: stig['description'],
+                    severity: stig['severity']
+                })
+        })
+        return stigs
+    }
+
+    export async function commentRecommendedStigs(
+        stigs: Stig[],
+        repo: { owner: string; repo: string },
+        issueNumber: number,
+        token: string
+    ): Promise<void> {
+        // construct comment with recommended STIGs
+        let comment = 'Recommended STIG:'
+        for (let stig of stigs) {
+            comment += `\r\n- [${stig.id}](${stig.url})`
+            comment += `\r\n    - ${stig.title}`
+        }
+
+        const octokit = getOctokit(token)
+
+        // post a comment about recommended STIG
+        await octokit.rest.issues.createComment({
+            owner: repo.owner,
+            repo: repo.repo,
+            issue_number: issueNumber,
+            body: comment
+        })
+    }
 }
 
 export default Requirement
