@@ -1,8 +1,6 @@
 import axios from 'axios'
-import {setupInterceptorsTo} from "./interceptors"
 
 namespace ApiService {
-    setupInterceptorsTo(axios);
 
     export async function getToken(username: string, password: string) {
         console.log('Authenticating in ARQAN')
@@ -34,14 +32,23 @@ namespace ApiService {
         )
         const task_id = response.data.task_id
 
-        response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`,
-            {
+        response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'accept': 'application/json'
+            }
+        });
+
+        while (response.status === 202) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before making another request
+            response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'accept': 'application/json'
                 }
-            })
-        console.log(response.status)
+            });
+        }
+
         return response.data
     }
 
@@ -68,7 +75,16 @@ namespace ApiService {
                 }
             })
 
-        console.log(response.status)
+        while (response.status === 202) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before making another request
+            response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'accept': 'application/json'
+                }
+            });
+        }
+
         return response.data.stig
     }
 }
