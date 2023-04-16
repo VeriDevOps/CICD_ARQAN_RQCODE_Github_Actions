@@ -3,6 +3,7 @@ import { sanitizeUrl } from "@braintree/sanitize-url";
 import { getRepo, getIssue } from './github'
 import Requirement from './requirement'
 import Rqcode from './rqcode'
+import ApiService from "./apiService";
 
 async function run(): Promise<void> {
   try {
@@ -14,6 +15,8 @@ async function run(): Promise<void> {
     const tests = getInput('search-tests', { required: false })
     const issues = getInput('create-issues', { required: false })
     const platform = sanitizeUrl(getInput('platform', { required: false }))
+    const username = getInput('username', { required: true })
+    const password = getInput('password', { required: true })
 
     console.log('Platform: ' + platform)
 
@@ -23,15 +26,16 @@ async function run(): Promise<void> {
     // get issue context
     const issue = getIssue()
 
-    // Api is down
-    const isSecurity = await Requirement.isSecurity(issue.content)
+    const arqan_token = await ApiService.getToken(username, password)
+
+    const isSecurity = await Requirement.isSecurity(issue.content, arqan_token)
     if (isSecurity) await Requirement.setIssueLabel(repo, issue.number, label, token)
 
     // Run suggestion of STIGs and test cases if:
     // 1. User specified input STIGs as true
     // 2. ARQAN Classification Service encounters issue as security requirement
     if (stigs === 'true' && isSecurity) {
-      const recommendedStigs = await Requirement.getStigs(issue.content, platform)
+      const recommendedStigs = await Requirement.getStigs(issue.content, platform, arqan_token)
       if (recommendedStigs) {
         await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 

@@ -23,10 +23,13 @@ namespace Rqcode {
         .then((data) => {
           if (data) {
             found.push({
+              description: stig.description,
+              severity: stig.severity,
+              source: stig.source,
               id: stig.id,
               url: stig.url,
               platform: stig.platform,
-              text: stig.text,
+              title: stig.title,
               rqcode: `${rqcodeRepo.url.slice(0, 36)}/tree/master${data.slice(6)}`
             })
           } else {
@@ -52,7 +55,7 @@ namespace Rqcode {
     if (tests.length) {
       for (let test of tests) {
         comment += `\r\n- [${test.id}](${test.rqcode})`
-        comment += `\r\n     ${test.text}`
+        comment += `\r\n     ${test.title}`
       }
     } else {
       comment = `[RQCODE](${rqcodeRepo.url}) doesn't have implemented tests for recommended STIGs currently :pensive:`
@@ -82,7 +85,15 @@ namespace Rqcode {
         body: `${stig.url}`
       })
       console.log('Created issue')
-      issuesUrls.push({ id: stig.id, url: stig.url, platform: stig.platform, text: stig.text, issueUrl: html_url })
+      issuesUrls.push({
+        description: stig.description,
+        severity: stig.severity,
+        source: stig.source,
+        id: stig.id,
+        url: stig.url,
+        platform: stig.platform,
+        title: stig.title,
+        issueUrl: html_url })
     }
 
     return issuesUrls

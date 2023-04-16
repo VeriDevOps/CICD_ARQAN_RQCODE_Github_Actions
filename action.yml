@@ -28,6 +28,12 @@ inputs:
     description: 'Platform for STIGs'
     required: false
     default: ''
+  username:
+    description: 'ARQAN username'
+    required: true
+  password:
+    description: 'ARQAN password'
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'

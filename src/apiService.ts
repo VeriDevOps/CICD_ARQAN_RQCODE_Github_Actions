@@ -1,20 +1,70 @@
 import axios from 'axios'
 
 namespace ApiService {
-  export async function getSecuritySentences(requirement: string) {
+
+  export async function getToken(username: string, password: string) {
+    console.log('Authenticating in ARQAN')
+    const response = await axios.post(
+        'http://51.250.88.251:8000/api/auth/sign-up',
+        { username: username, password: password },
+        {
+          headers: { 'Content-type': 'application/x-www-form-urlencoded' }
+        }
+    )
+    return response.data.access_token
+  }
+
+  export async function getSecuritySentences(requirement: string, token: string) {
     console.log('Making call to ARQAN')
-    const response = await axios.post('http://docker.softeam-rd.eu:7000/text', requirement, {
-      headers: { 'Content-type': 'text/plain;' }
-    })
-    console.log('Response data: ', response.data)
+    let response = await axios.post('http://51.250.88.251:8000/api/tasks/sec-req-extract-from-text',
+        {
+          'requirements': requirement
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+    )
+    const task_id = response.data.task_id
+
+    response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'accept': 'application/json'
+          }
+        })
+    console.log(response.status)
     return response.data
   }
 
-  export async function getRecommendedStigs(requirement: string, platform: string): Promise<{ [id: string]: string }> {
-    const response = await axios.get('http://docker.softeam-rd.eu:7000/stigs', {
-      params: { text: requirement, t_type: 1, platform: platform }
-    })
-    return response.data
+  export async function getRecommendedStigs(requirement: string, platform: string, token: string): Promise<Array<any>> {
+    let response = await axios.post('http://51.250.88.251:8000/api/tasks/sec-req-search-db',
+        {
+          'text': requirement,
+          'platform': platform
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+    const task_id = response.data.task_id
+
+    response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-search-db/${task_id}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'accept': 'application/json'
+          }
+        })
+
+    console.log(response.status)
+    return response.data.stig
   }
 }
 

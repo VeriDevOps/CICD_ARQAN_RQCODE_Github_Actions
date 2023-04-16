@@ -51,6 +51,14 @@ The solution is to [manually create a PAT](https://docs.github.com/en/authentica
 
 **Optional.** A github token used for creating an octoclient for making API calls for labeling and commenting Issues. If you want to use another user, you can specify its token. **Default**: `${{ github.token }}`
 
+### `username`
+
+**Required.** Username to sign-up in ARQAN microservice. Provide a unique username for ARQAN service in `${{ secrets.ARQAN_USER }}`.
+
+### `password`
+
+**Required.** Password to sign-up in ARQAN microservice. Provide a secure password for ARQAN service in `${{ secrets.ARQAN_PASS }}`.
+
 ## Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for step-by-step instructions.

@@ -3,12 +3,12 @@ import ApiService from './apiService'
 import { Stig } from './interfaces'
 
 namespace Requirement {
-  export async function isSecurity(issue: string): Promise<boolean> {
+  export async function isSecurity(issue: string, token: string): Promise<boolean> {
     console.log('In isSecurity function')
     // API call to ARQAN to classify the requirement
-    let securitySentences = await ApiService.getSecuritySentences(issue).then(
+    let securitySentences = await ApiService.getSecuritySentences(issue, token).then(
       (result) => {
-        return result.security_text
+        return result.requirements
       },
       (error) => {
         throw new Error(
@@ -40,23 +40,25 @@ namespace Requirement {
     })
   }
 
-  export async function getStigs(requirement: string, platform: string): Promise<Stig[]> {
+  export async function getStigs(requirement: string, platform: string, token: string): Promise<Stig[]> {
     // array for STIGs to the particular requirement
     let stigs: Array<Stig> = []
-    let response_json = await ApiService.getRecommendedStigs(requirement, platform)
-    if (Object.keys(response_json).length === 0) {
+    let response = await ApiService.getRecommendedStigs(requirement, platform, token)
+    if (response.length === 0) {
       return stigs
     }
-    for (let stig_text in response_json) {
-      // get STIG ID from the url
-      let [stig_platform, url] = response_json[stig_text][0]
-      let stig_id = url.split('/').pop()
-      if (stig_id) {
-        stigs.push({ id: stig_id, url: url, text: stig_text, platform: stig_platform})
-      } else {
-        throw new Error(`Couldn't get STIG ID from the url: ${url} returned by ARQAN`)
-      }
-    }
+    response.forEach( (stig) => {
+     stigs.push(
+         {
+           id: stig['id'],
+           url: stig['url'],
+           platform: stig['platform'],
+           title: stig['title'],
+           source: stig['source'],
+           description: stig['description'],
+           severity: stig['severity']
+         })
+    })
     return stigs
   }
 
@@ -70,7 +72,7 @@ namespace Requirement {
     let comment = 'Recommended STIG:'
     for (let stig of stigs) {
       comment += `\r\n- [${stig.id}](${stig.url})`
-      comment += `\r\n    - ${stig.text}`
+      comment += `\r\n    - ${stig.title}`
     }
 
     const octokit = getOctokit(token)
