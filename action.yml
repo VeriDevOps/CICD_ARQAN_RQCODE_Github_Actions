@@ -12,6 +12,14 @@ inputs:
     description: 'Enable STIGs suggestion through issue commenting'
     required: false
     default: 'true'
+  search-tests:
+    description: 'Enable search for tests in RQCODE repository'
+    required: false
+    default: 'true'
+  create-issues:
+    description: 'Enable issue creation in RQCODE repository'
+    required: false
+    default: 'false'
   token:
     description: 'The GitHub token to use.'
     required: false

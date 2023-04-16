@@ -11,6 +11,8 @@ async function run(): Promise<void> {
     const token = getInput('token', { required: false })
     const label = getInput('label', { required: false })
     const stigs = getInput('stigs-comment', { required: false })
+    const tests = getInput('search-tests', { required: false })
+    const issues = getInput('create-issues', { required: false })
     const platform = sanitizeUrl(getInput('platform', { required: false }))
 
     console.log('Platform: ' + platform)
@@ -34,11 +36,16 @@ async function run(): Promise<void> {
         await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 
         // INTERACTION with RQCODE repository goes here
-        await Rqcode.cloneRepo()
-        const tests = await Rqcode.findTests(recommendedStigs)
-        await Rqcode.commentFoundTests(tests.found, repo, issue.number, token)
-        const openedIssues = await Rqcode.openIssues(tests.missing, rqcodeToken)
-        await Rqcode.commentMissingTests(openedIssues, repo, issue.number, token)
+        if (tests === 'true') {
+          await Rqcode.cloneRepo()
+          const tests = await Rqcode.findTests(recommendedStigs)
+          await Rqcode.commentFoundTests(tests.found, repo, issue.number, token)
+
+          if (issues === 'true') {
+            const openedIssues = await Rqcode.openIssues(tests.missing, rqcodeToken)
+            await Rqcode.commentMissingTests(openedIssues, repo, issue.number, token)
+          }
+        }
       }
     }
   } catch (error: any) {
