@@ -18,8 +18,6 @@ async function run(): Promise<void> {
     const username = getInput('username', { required: true })
     const password = getInput('password', { required: true })
 
-    console.log('Platform: ' + platform)
-
     // get repo context
     const repo = getRepo()
 

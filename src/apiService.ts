@@ -6,9 +6,12 @@ namespace ApiService {
     console.log('Authenticating in ARQAN')
     const response = await axios.post(
         'http://51.250.88.251:8000/api/auth/sign-up',
-        { username: username, password: password },
+        `username=${username}&password=${password}`,
         {
-          headers: { 'Content-type': 'application/x-www-form-urlencoded' }
+          headers: {
+              'Content-type': 'application/x-www-form-urlencoded',
+              'accept': 'application/json'
+          }
         }
     )
     return response.data.access_token
