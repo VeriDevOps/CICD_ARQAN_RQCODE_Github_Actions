@@ -34,6 +34,10 @@ inputs:
   password:
     description: 'ARQAN password'
     required: true
+  limit:
+    description: 'Max number of suggested STIGs'
+    required: false
+    default: '5'
 runs:
   using: 'node16'
   main: 'dist/index.js'

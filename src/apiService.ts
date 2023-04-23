@@ -59,11 +59,12 @@ namespace ApiService {
         return response.data
     }
 
-    export async function getRecommendedStigs(requirement: string, platform: string, token: string): Promise<Array<any>> {
+    export async function getRecommendedStigs(requirement: string, platform: string, limit: number, token: string): Promise<Array<any>> {
         let response = await axios.post('http://51.250.88.251:8000/api/tasks/sec-req-search-db',
             {
                 'text': requirement,
-                'platform': platform
+                'platform': platform,
+                'limit': limit
             },
             {
                 headers: {

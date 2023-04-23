@@ -17,6 +17,7 @@ async function run(): Promise<void> {
         const platform = sanitizeUrl(getInput('platform', {required: false}))
         const username = getInput('username', {required: true})
         const password = getInput('password', {required: true})
+        const limit = parseInt(getInput('limit', {required: false}))
 
         // get repo context
         const repo = getRepo()
@@ -33,7 +34,7 @@ async function run(): Promise<void> {
         // 1. User specified input STIGs as true
         // 2. ARQAN Classification Service encounters issue as security requirement
         if (stigs === 'true' && isSecurity) {
-            const recommendedStigs = await Requirement.getStigs(issue.content, platform, arqan_token)
+            const recommendedStigs = await Requirement.getStigs(issue.content, platform, limit, arqan_token)
             if (recommendedStigs) {
                 await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 

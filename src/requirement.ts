@@ -34,10 +34,10 @@ namespace Requirement {
         })
     }
 
-    export async function getStigs(requirement: string, platform: string, token: string): Promise<Stig[]> {
+    export async function getStigs(requirement: string, platform: string, limit: number, token: string): Promise<Stig[]> {
         // array for STIGs to the particular requirement
         let stigs: Array<Stig> = []
-        let response = await ApiService.getRecommendedStigs(requirement, platform, token)
+        let response = await ApiService.getRecommendedStigs(requirement, platform, limit, token)
         if (response.length === 0) {
             return stigs
         }
