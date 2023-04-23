@@ -2,7 +2,7 @@ import axios from 'axios'
 
 namespace ApiService {
     const interval = 1000; // set polling interval to 1 second
-    const timeout  = 12000;
+    const timeout  = 120000;
 
     export async function getToken(username: string, password: string) {
         console.log('Authenticating in ARQAN')
@@ -32,8 +32,8 @@ namespace ApiService {
                 }
             }
         )
-
         const task_id = response.data.task_id
+        console.log("Task id: ", task_id)
 
         response = await axios.get(`http://51.250.88.251:8000/api/tasks/sec-req-extract/${task_id}`, {
             headers: {
@@ -41,6 +41,7 @@ namespace ApiService {
                 'accept': 'application/json'
             }
         });
+
         const startTime = new Date().getTime();
         while (response.status === 202 && new Date().getTime() - startTime < timeout) {
             await new Promise(resolve => setTimeout(resolve, interval)); // Wait for interval before making another request
@@ -51,9 +52,8 @@ namespace ApiService {
                 }
             });
         }
-
         if (response.status === 202) {
-            throw new Error('Polling timed out');
+            throw new Error('Polling timed out. Probably ARQAN is down.');
         }
 
         return response.data

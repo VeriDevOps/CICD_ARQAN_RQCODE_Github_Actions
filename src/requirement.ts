@@ -4,16 +4,10 @@ import {Stig} from './interfaces'
 
 namespace Requirement {
     export async function isSecurity(issue: string, token: string): Promise<boolean> {
-        console.log('In isSecurity function')
         // API call to ARQAN to classify the requirement
         let securitySentences = await ApiService.getSecuritySentences(issue, token).then(
             (result) => {
                 return result.requirements
-            },
-            (error) => {
-                throw new Error(
-                    `Received ${error.response.status} status code from ARQAN Classification Service for input: ${issue}.`
-                )
             }
         )
 
