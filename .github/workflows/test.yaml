@@ -20,3 +20,4 @@ jobs:
           platform: canonical_ubuntu_18.04_lts
           username: ${{ secrets.ARQAN_USER }}
           password: ${{ secrets.ARQAN_PASS }}
+          create-issues: 'true'
