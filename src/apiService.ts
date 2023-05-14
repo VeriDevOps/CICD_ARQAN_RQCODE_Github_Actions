@@ -5,6 +5,7 @@ namespace ApiService {
     const timeout  = 120000;
     export async function getToken(url: string, username: string, password: string) {
         console.log('Authenticating in ARQAN')
+        console.log(`${url}/auth/sign-up`)
         const response = await axios.post(
             `${url}/auth/sign-up`,
             `username=${username}&password=${password}`,
