@@ -3,7 +3,6 @@ import axios from 'axios'
 namespace ApiService {
     const interval = 1000; // set polling interval to 1 second
     const timeout  = 120000;
-    let url = ''
     export async function getToken(url: string, username: string, password: string) {
         console.log('Authenticating in ARQAN')
         const response = await axios.post(

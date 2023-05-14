@@ -18,7 +18,7 @@ async function run(): Promise<void> {
         const username = getInput('username', {required: true})
         const password = getInput('password', {required: true})
         const limit = parseInt(getInput('limit', {required: false}))
-        const api_url = sanitizeUrl(getInput('api_url', {required: false}))
+        const api_url = getInput('api_url', {required: false})
 
         // get repo context
         const repo = getRepo()
