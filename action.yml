@@ -38,6 +38,10 @@ inputs:
     description: 'Max number of suggested STIGs'
     required: false
     default: '5'
+  api_url:
+    description: 'Recommendation service API url'
+    required: false
+    default: 'http://arqan.softeam-rd.eu/api/'
 runs:
   using: 'node16'
   main: 'dist/index.js'

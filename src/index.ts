@@ -18,6 +18,7 @@ async function run(): Promise<void> {
         const username = getInput('username', {required: true})
         const password = getInput('password', {required: true})
         const limit = parseInt(getInput('limit', {required: false}))
+        const api_url = sanitizeUrl(getInput('api_url', {required: false}))
 
         // get repo context
         const repo = getRepo()
@@ -25,16 +26,16 @@ async function run(): Promise<void> {
         // get issue context
         const issue = getIssue()
 
-        const arqan_token = await ApiService.getToken(username, password)
+        const arqan_token = await ApiService.getToken(api_url, username, password)
 
-        const isSecurity = await Requirement.isSecurity(issue.content, arqan_token)
+        const isSecurity = await Requirement.isSecurity(api_url, issue.content, arqan_token)
         if (isSecurity) await Requirement.setIssueLabel(repo, issue.number, label, token)
 
         // Run suggestion of STIGs and test cases if:
         // 1. User specified input STIGs as true
         // 2. ARQAN Classification Service encounters issue as security requirement
         if (stigs === 'true' && isSecurity) {
-            const recommendedStigs = await Requirement.getStigs(issue.content, platform, limit, arqan_token)
+            const recommendedStigs = await Requirement.getStigs(api_url, issue.content, platform, limit, arqan_token)
             if (recommendedStigs) {
                 await Requirement.commentRecommendedStigs(recommendedStigs, repo, issue.number, token)
 

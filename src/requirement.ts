@@ -3,9 +3,9 @@ import ApiService from './apiService'
 import {Stig} from './interfaces'
 
 namespace Requirement {
-    export async function isSecurity(issue: string, token: string): Promise<boolean> {
+    export async function isSecurity(api_url: string, issue: string, token: string): Promise<boolean> {
         // API call to ARQAN to classify the requirement
-        let securitySentences = await ApiService.getSecuritySentences(issue, token).then(
+        let securitySentences = await ApiService.getSecuritySentences(api_url, issue, token).then(
             (result) => {
                 return result.requirements
             }
@@ -34,10 +34,10 @@ namespace Requirement {
         })
     }
 
-    export async function getStigs(requirement: string, platform: string, limit: number, token: string): Promise<Stig[]> {
+    export async function getStigs(api_url: string, requirement: string, platform: string, limit: number, token: string): Promise<Stig[]> {
         // array for STIGs to the particular requirement
         let stigs: Array<Stig> = []
-        let response = await ApiService.getRecommendedStigs(requirement, platform, limit, token)
+        let response = await ApiService.getRecommendedStigs(api_url, requirement, platform, limit, token)
         if (response.length === 0) {
             return stigs
         }
