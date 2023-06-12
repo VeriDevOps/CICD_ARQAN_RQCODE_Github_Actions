@@ -66,6 +66,7 @@ namespace Requirement {
         let comment = 'Recommended STIG:'
         for (let stig of stigs) {
             comment += `\r\n- [${stig.id}](${stig.url})`
+            comment += `\r\n    - ${stig.platform}`
             comment += `\r\n    - ${stig.title}`
         }
 
