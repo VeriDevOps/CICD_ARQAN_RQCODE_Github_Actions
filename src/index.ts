@@ -29,7 +29,7 @@ async function run(): Promise<void> {
         const arqan_token = await ApiService.getToken(api_url, username, password)
 
         const isSecurity = await Requirement.isSecurity(api_url, issue.content, arqan_token)
-        if (isSecurity) await Requirement.setIssueLabel(repo, issue.number, label, token)
+        await Requirement.setIssueLabel(repo, issue.number, label, token, isSecurity)
 
         // Run suggestion of STIGs and test cases if:
         // 1. User specified input STIGs as true

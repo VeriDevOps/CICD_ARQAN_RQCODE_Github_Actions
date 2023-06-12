@@ -40,7 +40,6 @@ namespace ApiService {
                 'accept': 'application/json'
             }
         });
-        console.log(response.data)
         const startTime = new Date().getTime();
         while (response.status === 202 && new Date().getTime() - startTime < timeout) {
             await new Promise(resolve => setTimeout(resolve, interval)); // Wait for interval before making another request

@@ -20,18 +20,30 @@ namespace Requirement {
         repo: { owner: string; repo: string },
         issueNumber: number,
         label: string,
-        token: string
+        token: string,
+        isSecurity: boolean
     ): Promise<void> {
         const octokit = getOctokit(token)
-        console.log('ARQAN Classification Service encounters the current issue as security requirement.')
+        if (isSecurity) {
+            console.log('ARQAN Classification Service encounters the current issue as security requirement.')
 
-        console.log(`Setting label "${label}" on the current issue`)
-        await octokit.rest.issues.addLabels({
-            owner: repo.owner,
-            repo: repo.repo,
-            issue_number: issueNumber,
-            labels: [label]
-        })
+            console.log(`Setting label "${label}" on the current issue`)
+            await octokit.rest.issues.addLabels({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: issueNumber,
+                labels: [label]
+            })
+        } else {
+            console.log('ARQAN Classification Service encounters the current issue as non security requirement.')
+            await octokit.rest.issues.createComment({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: issueNumber,
+                body: "ARQAN Classification Service encounters the current issue as non security requirement. " +
+                      "Try to reformulate the issue"
+            })
+        }
     }
 
     export async function getStigs(api_url: string, requirement: string, platform: string, limit: number, token: string): Promise<Stig[]> {
