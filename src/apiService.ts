@@ -73,7 +73,7 @@ namespace ApiService {
 
         const task_id = response.data.task_id
 
-        response = await axios.get(`${url}/tasks/sec-req-search-db/${task_id}`,
+        response = await axios.get(`${url}/tasks/${task_id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -85,7 +85,7 @@ namespace ApiService {
         const startTime = new Date().getTime();
         while (response.status === 202 && new Date().getTime() - startTime < timeout) {
             await new Promise(resolve => setTimeout(resolve, interval)); // Wait for interval before making another request
-            response = await axios.get(`${url}/tasks/sec-req-extract/${task_id}`, {
+            response = await axios.get(`${url}/tasks/${task_id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'accept': 'application/json'
