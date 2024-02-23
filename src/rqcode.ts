@@ -57,6 +57,7 @@ namespace Rqcode {
                 comment += `\r\n- [${test.id}](${test.rqcode})`
                 comment += `\r\n     ${test.title}`
             }
+            comment += `\r\n> :bulb: **Tip:** You may check the STIG requirements by calling \`java -jar RQCODE.jar V_xxxxx\``
         } else {
             comment = `[RQCODE](${rqcodeRepo.url}) doesn't have implemented tests for recommended STIGs currently :pensive:`
         }
