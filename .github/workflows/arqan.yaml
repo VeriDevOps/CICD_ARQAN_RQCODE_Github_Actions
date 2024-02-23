@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./ # load and run local action
-        if: github.event.label.name == 'stig'
+        if: github.event.label.name == 'arqan'
         name: Label an issue and provide recommendtations
         with:
           rqcode-token: ${{ secrets.RQCODE_TOKEN }}
