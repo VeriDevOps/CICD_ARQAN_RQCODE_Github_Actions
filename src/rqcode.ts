@@ -19,7 +19,7 @@ namespace Rqcode {
         const {exec} = require('child_process')
         for (let stig of stigs) {
             const stigDir = stig.id.replace(/-/g, '_')
-            await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs/ -maxdepth 4 -name "${stigDir}"
+            await executeCommand(`find ${rqcodeRepo.repo}/src/main/java/rqcode/stigs/ -name "${stigDir}*"
             "`, exec)
                 .then((data) => {
                     if (data) {
